@@ -1,0 +1,564 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>Naturaleza · Proposta de Parceria</title>
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;500;600;700;800&family=Space+Mono:wght@400;700&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+*{margin:0;padding:0;box-sizing:border-box;}
+:root{
+  --black:#070e08;
+  --dark:#0d1a0e;
+  --dark2:#132116;
+  --dark3:#1d3320;
+  --green:#7dbf5a;
+  --green-dim:rgba(125,191,90,.13);
+  --green-glow:rgba(125,191,90,.32);
+  --white:#f5f1e8;
+  --off:#ddd8cc;
+  --gray:#b0a99e;
+  --gray-dim:#7a7470;
+  --fd:'Syne',sans-serif;
+  --fm:'Space Mono',monospace;
+  --fb:'Inter',sans-serif;
+}
+html,body{width:100%;height:100%;overflow:hidden;background:var(--black);color:var(--white);font-family:var(--fb);}
+
+#shell{display:flex;flex-direction:column;height:100vh;height:100dvh;}
+#progress{height:2px;background:var(--dark3);flex-shrink:0;z-index:100;}
+#progress-fill{height:100%;background:var(--green);transition:width .6s cubic-bezier(.22,1,.36,1);box-shadow:0 0 10px var(--green-glow);}
+#stage{flex:1;position:relative;overflow:hidden;min-height:0;}
+
+.slide{
+  position:absolute;top:0;left:0;width:100%;height:100%;
+  opacity:0;pointer-events:none;
+  transition:opacity .45s ease,transform .45s ease;
+  transform:scale(.97);
+}
+.slide.active{opacity:1;transform:scale(1);pointer-events:all;}
+
+.inner{
+  position:relative;z-index:1;
+  width:100%;height:100%;
+  display:flex;flex-direction:column;justify-content:center;
+  padding:clamp(22px,3.5vh,52px) clamp(26px,5vw,72px);
+}
+.inner.scroll{overflow-y:auto;justify-content:flex-start;-webkit-overflow-scrolling:touch;}
+.deco{position:absolute;inset:0;z-index:0;pointer-events:none;overflow:hidden;}
+
+/* ── Typography ── */
+.ey{
+  font-family:var(--fm);font-size:clamp(12px,1.1vw,14px);
+  letter-spacing:.22em;text-transform:uppercase;color:var(--green);
+  margin-bottom:clamp(10px,1.5vh,20px);flex-shrink:0;
+}
+.bt{
+  font-family:var(--fd);font-size:clamp(28px,5vw,78px);
+  font-weight:800;line-height:.95;letter-spacing:-.03em;
+  margin-bottom:clamp(10px,1.5vh,20px);
+}
+.bt em{font-style:italic;color:var(--green);}
+.bt .dim{color:var(--gray-dim);}
+.st{
+  font-family:var(--fb);font-size:clamp(16px,1.5vw,22px);
+  font-weight:400;color:var(--off);line-height:1.65;max-width:600px;
+}
+.mt{
+  font-family:var(--fd);font-size:clamp(22px,3.2vw,48px);
+  font-weight:700;line-height:1.05;letter-spacing:-.02em;
+  margin-bottom:clamp(8px,1vh,14px);flex-shrink:0;
+}
+.mt em{font-style:italic;color:var(--green);}
+.dv{width:36px;height:2px;background:var(--green);margin:12px 0;opacity:.6;flex-shrink:0;}
+.tr{display:flex;gap:8px;flex-wrap:wrap;margin-top:clamp(8px,1.2vh,16px);}
+.tg{
+  border:1px solid var(--gray-dim);border-radius:100px;padding:6px 16px;
+  font-family:var(--fm);font-size:clamp(10px,.85vw,13px);
+  letter-spacing:.1em;text-transform:uppercase;color:var(--off);
+}
+
+/* ═══════ S-COVER ═══════ */
+.s-cover{background:var(--black);}
+.s-cover .inner{justify-content:flex-end;padding-bottom:clamp(52px,9vh,110px);}
+.deco-glow{
+  position:absolute;top:-20%;right:-15%;width:65vw;height:65vw;
+  background:radial-gradient(circle,var(--green-dim),transparent 60%);
+  filter:blur(90px);
+}
+.deco-text{
+  position:absolute;bottom:-1vw;left:-1vw;
+  font-family:var(--fd);font-size:clamp(52px,14vw,190px);
+  font-weight:800;color:rgba(255,255,255,.016);letter-spacing:-.04em;white-space:nowrap;
+}
+.s-cover .bt{font-size:clamp(36px,7vw,98px);}
+
+/* ═══════ S-RECAP ═══════ */
+.s-recap{background:var(--dark);}
+.rg{
+  display:grid;grid-template-columns:repeat(5,1fr);
+  gap:clamp(6px,.8vw,10px);margin-top:clamp(12px,1.8vh,22px);width:100%;flex-shrink:0;
+}
+.rc{
+  background:var(--dark2);border:1px solid var(--dark3);border-radius:11px;
+  padding:clamp(10px,1.4vh,20px) clamp(8px,1vw,16px);
+  display:flex;flex-direction:column;gap:clamp(4px,.6vh,8px);
+  transition:border-color .3s,transform .3s;position:relative;overflow:hidden;
+}
+.rc:hover{border-color:var(--green);transform:translateY(-2px);}
+.rc::before{content:'';position:absolute;top:0;left:0;right:0;height:2px;background:var(--green);opacity:0;transition:opacity .3s;}
+.rc:hover::before{opacity:1;}
+.rc .n{font-family:var(--fd);font-size:clamp(22px,2.8vw,40px);font-weight:800;color:var(--dark3);line-height:1;}
+.rc .ct{font-family:var(--fd);font-size:clamp(14px,1.2vw,17px);font-weight:700;color:var(--white);line-height:1.2;}
+.rc .cb{font-size:clamp(13px,1vw,15px);color:var(--off);line-height:1.55;}
+
+/* ═══════ S-CTX ═══════ */
+.s-ctx{background:var(--dark);}
+.s-ctx .inner{align-items:center;text-align:center;}
+.s-ctx .mt{max-width:740px;}
+.s-ctx .st{max-width:560px;margin:0 auto;}
+.s-ctx .tr{justify-content:center;}
+
+/* ═══════ S-GREEN ═══════ */
+.s-grn{background:var(--green);color:var(--black);}
+.s-grn .deco-light{position:absolute;inset:0;background:radial-gradient(ellipse at 25% 65%,rgba(255,255,255,.1),transparent 60%);}
+.s-grn .ey{color:rgba(0,0,0,.5);}
+.s-grn .bt{color:var(--black);font-size:clamp(22px,4vw,62px);}
+.s-grn .bt em{color:rgba(0,0,0,.42);}
+.s-grn .dv{background:rgba(0,0,0,.2);}
+.s-grn .st{color:rgba(0,0,0,.72);max-width:540px;font-weight:500;}
+
+/* ═══════ S-LIST ═══════ */
+.s-list{background:var(--black);}
+.dl{
+  display:grid;grid-template-columns:1fr 1fr;
+  gap:7px;margin-top:clamp(12px,1.8vh,20px);width:100%;flex-shrink:0;
+}
+.di{
+  background:var(--dark2);border:1px solid var(--dark3);border-radius:10px;
+  padding:clamp(10px,1.3vh,16px) clamp(11px,1.2vw,16px);
+  transition:border-color .3s;
+}
+.di:hover{border-color:var(--green);}
+.dm{width:20px;height:2px;background:var(--green);margin-bottom:7px;opacity:.85;}
+.dt{font-family:var(--fd);font-size:clamp(14px,1.2vw,17px);font-weight:700;color:var(--white);margin-bottom:4px;line-height:1.2;}
+.dd{font-size:clamp(13px,1vw,15px);color:var(--off);line-height:1.55;}
+.di.full{grid-column:1/-1;}
+
+/* ═══════ S-INV ═══════ */
+.s-inv{background:var(--dark);}
+.iv{
+  display:flex;flex-direction:column;gap:7px;
+  margin-top:clamp(12px,1.6vh,20px);width:100%;max-width:580px;flex-shrink:0;
+}
+.ip{
+  background:var(--dark2);border:1px solid var(--dark3);border-radius:10px;
+  padding:clamp(10px,1.3vh,15px) clamp(12px,1.5vw,18px);
+  display:flex;justify-content:space-between;align-items:center;gap:10px;
+  transition:border-color .3s;
+}
+.ip.hl{border-color:rgba(125,191,90,.38);}
+.ip.tot{background:var(--green);border-color:var(--green);}
+.ip-d{font-family:var(--fm);font-size:clamp(11px,.9vw,13px);letter-spacing:.1em;text-transform:uppercase;color:var(--gray);margin-bottom:3px;}
+.ip-t{font-family:var(--fd);font-size:clamp(14px,1.2vw,18px);font-weight:700;color:var(--white);line-height:1.2;}
+.ip-s{font-size:clamp(12px,.95vw,14px);color:var(--off);margin-top:3px;line-height:1.45;}
+.ip-r{text-align:right;flex-shrink:0;}
+.ip-a{font-family:var(--fd);font-size:clamp(19px,2.2vw,26px);font-weight:800;color:var(--green);}
+.ip-n{font-size:clamp(11px,.82vw,13px);color:var(--gray);margin-top:2px;}
+.tot .ip-d,.tot .ip-s,.tot .ip-n{color:rgba(0,0,0,.55);}
+.tot .ip-t{color:var(--black);}
+.tot .ip-a{color:var(--black);}
+
+/* ═══════ S-CTA ═══════ */
+.s-cta{background:var(--dark);}
+.s-cta .inner{align-items:center;text-align:center;}
+.deco-big{
+  position:absolute;top:50%;left:50%;transform:translate(-50%,-55%);
+  font-family:var(--fd);font-size:clamp(90px,18vw,260px);
+  font-weight:800;color:var(--dark3);line-height:1;
+}
+.deco-glow2{
+  position:absolute;top:50%;left:50%;width:38vw;height:38vw;transform:translate(-50%,-50%);
+  background:radial-gradient(circle,var(--green-dim),transparent 55%);
+  filter:blur(55px);
+}
+.s-cta .bt{font-size:clamp(34px,6.5vw,92px);}
+
+/* ── Nav ── */
+#nav{
+  background:var(--dark2);border-top:1px solid var(--dark3);
+  display:flex;align-items:center;justify-content:space-between;
+  padding:12px clamp(14px,2.5vw,30px);flex-shrink:0;z-index:100;gap:10px;
+}
+.nb{
+  padding:10px 18px;background:transparent;border:1px solid var(--dark3);
+  border-radius:100px;font-family:var(--fm);font-size:11px;
+  letter-spacing:.1em;text-transform:uppercase;color:var(--off);
+  cursor:pointer;transition:all .2s;white-space:nowrap;
+}
+.nb:hover:not(:disabled){border-color:var(--green);color:var(--green);}
+.nb:disabled{opacity:.22;cursor:default;}
+.nb.pr{background:var(--green);border-color:var(--green);color:var(--black);font-weight:700;}
+.nb.pr:hover:not(:disabled){background:#8fd468;}
+.nc{display:flex;align-items:center;gap:10px;flex:1;justify-content:center;}
+.nd{width:9px;height:9px;border-radius:50%;background:var(--dark3);cursor:pointer;transition:all .2s;border:none;padding:0;}
+.nd.active{background:var(--green);box-shadow:0 0 8px var(--green-glow);transform:scale(1.4);}
+.nrr{font-family:var(--fm);font-size:11px;letter-spacing:.1em;color:var(--gray);white-space:nowrap;}
+.kh{
+  font-family:var(--fm);font-size:10px;letter-spacing:.13em;
+  text-transform:uppercase;color:var(--gray-dim);text-align:center;
+  padding:5px 0;background:var(--black);flex-shrink:0;
+}
+
+/* ── Anim ── */
+@keyframes fu{from{opacity:0;transform:translateY(18px)}to{opacity:1;transform:translateY(0)}}
+.slide.active .a{animation:fu .5s cubic-bezier(.22,1,.36,1) both;}
+.slide.active .a1{animation-delay:.06s;}
+.slide.active .a2{animation-delay:.14s;}
+.slide.active .a3{animation-delay:.22s;}
+.slide.active .a4{animation-delay:.30s;}
+.slide.active .a5{animation-delay:.38s;}
+
+/* ── Responsive ── */
+@media(max-width:900px){.rg{grid-template-columns:repeat(3,1fr);}}
+@media(max-width:600px){
+  .rg{grid-template-columns:1fr 1fr;}
+  .dl{grid-template-columns:1fr;}
+  .di.full{grid-column:1;}
+  .inner{padding:clamp(18px,3vh,32px) clamp(18px,5vw,30px);}
+  .s-cover .inner{padding-bottom:clamp(48px,9vh,80px);}
+}
+</style>
+</head>
+<body>
+<div id="shell">
+  <div id="progress"><div id="progress-fill" style="width:0%"></div></div>
+  <div id="stage">
+
+    <!-- SLIDE 1 — CAPA -->
+    <div class="slide s-cover active" data-index="0">
+      <div class="deco">
+        <div class="deco-glow"></div>
+        <div class="deco-text">NATURALEZA</div>
+      </div>
+      <div class="inner">
+        <p class="ey a a1">Proposta de Parceria · 2026</p>
+        <h1 class="bt a a2">Naturaleza<br>× <em>Gustavo</em></h1>
+        <div class="tr a a3">
+          <span class="tg">Identidade Visual</span>
+          <span class="tg">Estratégia de Conteúdo</span>
+          <span class="tg">Produção de Reels</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- SLIDE 2 — O NEGÓCIO -->
+    <div class="slide s-recap" data-index="1">
+      <div class="inner">
+        <p class="ey a a1">O que você tem</p>
+        <h2 class="mt a a2">O Negócio</h2>
+        <div class="rg a a3">
+          <div class="rc">
+            <div class="n">01</div>
+            <div class="ct">Madeira</div>
+            <div class="cb">Mogno beneficiado, tábuas, tampos de mesa e prateleira. Encomendas sob medida.</div>
+          </div>
+          <div class="rc">
+            <div class="n">02</div>
+            <div class="ct">Baunilha</div>
+            <div class="cb">Extrato e mudas. Para confeitarias e perfumaria. Produto com rótulo próprio.</div>
+          </div>
+          <div class="rc">
+            <div class="n">03</div>
+            <div class="ct">Cacau & Mel</div>
+            <div class="cb">Nibs de cacau e mel da agrofloresta. Pequenas quantidades com origem rastreável.</div>
+          </div>
+          <div class="rc">
+            <div class="n">04</div>
+            <div class="ct">Canal de Venda</div>
+            <div class="cb">Venda direta pelo Instagram. Potencial enorme com a presença certa — ainda inexplorado.</div>
+          </div>
+          <div class="rc">
+            <div class="n">05</div>
+            <div class="ct">A Filosofia</div>
+            <div class="cb">"Tudo o que comercializo vem daqui." A Naturaleza como negócio e estilo de vida.</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- SLIDE 3 — VISÃO DE SUCESSO -->
+    <div class="slide s-grn" data-index="2">
+      <div class="deco"><div class="deco-light"></div></div>
+      <div class="inner">
+        <p class="ey a a1">Você disse</p>
+        <h2 class="bt a a2">"Mostrar é importante.<br>Que a pessoa <em>entenda</em>."</h2>
+        <div class="dv a a3"></div>
+        <p class="st a a4">Uma fotografia do negócio, eternizada. Ver pessoas se interessando, interagindo — e comprando.</p>
+      </div>
+    </div>
+
+    <!-- SLIDE 4 — A PROPOSTA -->
+    <div class="slide s-ctx" data-index="3">
+      <div class="inner">
+        <p class="ey a a1">A proposta</p>
+        <h2 class="mt a a2">Não vamos só criar conteúdo.<br>Vamos construir a identidade da <em>Naturaleza</em>.</h2>
+        <div class="dv a a3"></div>
+        <p class="st a a4">Do rótulo da baunilha ao Reel que aparece no feed de quem compra. Tudo consistente, com intenção, com a sua cara.</p>
+        <div class="tr a a5">
+          <span class="tg">Fase 1 · Identidade & Estratégia</span>
+          <span class="tg">Fase 2 · Produção Mensal</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- SLIDE 5 — IDENTIDADE VISUAL -->
+    <div class="slide s-list" data-index="4">
+      <div class="inner scroll">
+        <p class="ey a a1">Fase 1 · 60 dias</p>
+        <h2 class="mt a a2">Identidade <em>Visual</em></h2>
+        <div class="dl a a3">
+          <div class="di">
+            <div class="dm"></div>
+            <div class="dt">Logotipo</div>
+            <div class="dd">A versão definitiva do símbolo da Naturaleza. Proporcional, versátil, pronto para qualquer superfície.</div>
+          </div>
+          <div class="di">
+            <div class="dm"></div>
+            <div class="dt">Paleta de Cores</div>
+            <div class="dd">As cores que vão aparecer em tudo. Posts, rótulos, materiais. Consistência que cria reconhecimento.</div>
+          </div>
+          <div class="di">
+            <div class="dm"></div>
+            <div class="dt">Tipografia</div>
+            <div class="dd">As fontes certas para a Naturaleza, do título no Reel ao texto na embalagem.</div>
+          </div>
+          <div class="di">
+            <div class="dm"></div>
+            <div class="dt">Voz da Marca</div>
+            <div class="dd">Como a Naturaleza fala: o tom das legendas, o jeito de se apresentar, a mensagem que fica.</div>
+          </div>
+          <div class="di full">
+            <div class="dm"></div>
+            <div class="dt">Redesign dos Rótulos</div>
+            <div class="dd">Seus rótulos atuais, da baunilha e dos demais produtos, repensados com a nova identidade. A mesma embalagem, agora à altura do produto que está dentro. Prontos para imprimir.</div>
+          </div>
+          <div class="di full">
+            <div class="dm"></div>
+            <div class="dt">Guia de Marca</div>
+            <div class="dd">Um documento com tudo registrado: cores, fontes, logotipo, tom de voz. Para que nada mude sem querer ao longo do tempo, e qualquer material novo mantenha a identidade.</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- SLIDE 6 — ESTRATÉGIA -->
+    <div class="slide s-list" data-index="5">
+      <div class="inner scroll">
+        <p class="ey a a1">Fase 1 · 60 dias</p>
+        <h2 class="mt a a2">Estratégia de <em>Conteúdo</em></h2>
+        <div class="dl a a3">
+          <div class="di">
+            <div class="dm"></div>
+            <div class="dt">Canal e Formato</div>
+            <div class="dd">Instagram como foco, Reels como formato principal.</div>
+          </div>
+          <div class="di">
+            <div class="dm"></div>
+            <div class="dt">Pilares de Conteúdo</div>
+            <div class="dd">Os temas que a Naturaleza vai explorar sempre: processo, origem, produto, estilo de vida.</div>
+          </div>
+          <div class="di">
+            <div class="dm"></div>
+            <div class="dt">Cadência de Publicação</div>
+            <div class="dd">Com que frequência postar, em que dias e horários, para chegar em quem compra.</div>
+          </div>
+          <div class="di">
+            <div class="dm"></div>
+            <div class="dt">Referências Visuais</div>
+            <div class="dd">O estilo de vídeo que vamos construir, tom, ritmo, paleta. Para você entender a direção antes de gravar.</div>
+          </div>
+          <div class="di full">
+            <div class="dm"></div>
+            <div class="dt">Calendário Editorial de 30 Dias</div>
+            <div class="dd">Um mês inteiro de conteúdo já planejado: tema, formato e mensagem de cada Reel. Você sabe exatamente o que filmar antes de pegar o celular.</div>
+          </div>
+          <div class="di full">
+            <div class="dm"></div>
+            <div class="dt">2 Reels de Lançamento</div>
+            <div class="dd">Ainda na Fase 1, produzimos os primeiros 2 Reels da Naturaleza, testando a identidade na prática e aquecendo o perfil antes da produção regular começar.</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- SLIDE 7 — PRODUÇÃO MENSAL -->
+    <div class="slide s-list" data-index="6">
+      <div class="inner scroll">
+        <p class="ey a a1">Fase 2 · A partir do dia 60</p>
+        <h2 class="mt a a2">Produção <em>Mensal</em></h2>
+        <div class="dl a a3">
+          <div class="di">
+            <div class="dm"></div>
+            <div class="dt">4 Reels Editados</div>
+            <div class="dd">9:16, com trilha licenciada, legendados e prontos para publicar.</div>
+          </div>
+          <div class="di">
+            <div class="dm"></div>
+            <div class="dt">Briefings de Gravação</div>
+            <div class="dd">O que filmar, como, com qual mensagem, antes de você pegar o celular.</div>
+          </div>
+          <div class="di">
+            <div class="dm"></div>
+            <div class="dt">Trilha Licenciada</div>
+            <div class="dd">Músicas selecionadas e liberadas para uso comercial, sem risco de derrubada de conteúdo.</div>
+          </div>
+          <div class="di">
+            <div class="dm"></div>
+            <div class="dt">Capa dos Reels</div>
+            <div class="dd">A imagem estática que aparece no perfil do Instagram, o feed como um todo, pensado e coerente.</div>
+          </div>
+          <div class="di">
+            <div class="dm"></div>
+            <div class="dt">Legendas & Hashtags</div>
+            <div class="dd">Texto com a voz da marca, posicionamento de SEO e chamada para ação.</div>
+          </div>
+          <div class="di">
+            <div class="dm"></div>
+            <div class="dt">Agendamento & Publicação</div>
+            <div class="dd">Você não precisa se preocupar com isso.</div>
+          </div>
+          <div class="di">
+            <div class="dm"></div>
+            <div class="dt">Relatório Mensal</div>
+            <div class="dd">Alcance, visualizações, interações. Simples e claro, para acompanhar o crescimento juntos.</div>
+          </div>
+          <div class="di">
+            <div class="dm"></div>
+            <div class="dt">Revisões Inclusas</div>
+            <div class="dd">Uma (01) rodada de revisão por Reel. O que chegar errado, a gente ajusta.</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- SLIDE 8 — INVESTIMENTO -->
+    <div class="slide s-inv" data-index="7">
+      <div class="inner scroll">
+        <p class="ey a a1">Investimento</p>
+        <h2 class="mt a a2">O que você <em>paga</em></h2>
+        <div class="iv a a3">
+          <div class="ip hl">
+            <div class="ip-l">
+              <div class="ip-d">Dia 0 · Assinatura</div>
+              <div class="ip-t">Início da Fase 1</div>
+              <div class="ip-s">Identidade & estratégia começam</div>
+            </div>
+            <div class="ip-r">
+              <div class="ip-a">R$ 900</div>
+              <div class="ip-n">50% da Fase 1</div>
+            </div>
+          </div>
+          <div class="ip">
+            <div class="ip-l">
+              <div class="ip-d">Dia 60 · Entrega</div>
+              <div class="ip-t">Fase 1 entregue + Mês 1 abre</div>
+              <div class="ip-s">Identidade, estratégia, rótulos e 2 Reels entregues</div>
+            </div>
+            <div class="ip-r">
+              <div class="ip-a">R$ 1.500</div>
+              <div class="ip-n">R$ 900 + R$ 600</div>
+            </div>
+          </div>
+          <div class="ip">
+            <div class="ip-l">
+              <div class="ip-d">Dia 90</div>
+              <div class="ip-t">Mês 1 fecha · Mês 2 abre</div>
+              <div class="ip-s">4 Reels entregues · ritmo estabelecido</div>
+            </div>
+            <div class="ip-r">
+              <div class="ip-a">R$ 1.200</div>
+              <div class="ip-n">R$ 600 + R$ 600</div>
+            </div>
+          </div>
+          <div class="ip">
+            <div class="ip-l">
+              <div class="ip-d">Dia 120</div>
+              <div class="ip-t">Mês 2 fecha</div>
+              <div class="ip-s">4 Reels entregues</div>
+            </div>
+            <div class="ip-r">
+              <div class="ip-a">R$ 600</div>
+              <div class="ip-n">Fechamento</div>
+            </div>
+          </div>
+          <div class="ip tot">
+            <div class="ip-l">
+              <div class="ip-d">Total · primeiros 4 meses</div>
+              <div class="ip-t">Identidade + Estratégia + 10 Reels</div>
+              <div class="ip-s">A partir do mês 3: R$ 1.200/mês · R$ 600 quinzenais</div>
+            </div>
+            <div class="ip-r">
+              <div class="ip-a">R$ 4.200</div>
+              <div class="ip-n">Compromisso mínimo: 3 meses</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- SLIDE 9 — VAMOS COMEÇAR -->
+    <div class="slide s-cta" data-index="8">
+      <div class="deco">
+        <div class="deco-big">✦</div>
+        <div class="deco-glow2"></div>
+      </div>
+      <div class="inner">
+        <p class="ey a a1">Próximos passos</p>
+        <h2 class="bt a a2"><em>Vamos</em><br>começar?</h2>
+        <div class="dv a a3"></div>
+        <p class="st a a4">Confirme e damos início à Fase 1. A Naturaleza merece aparecer do jeito que ela é.</p>
+      </div>
+    </div>
+
+  </div>
+
+  <div id="nav">
+    <button class="nb" id="bp" onclick="prev()">← Ant.</button>
+    <div class="nc" id="dots"></div>
+    <span class="nrr" id="counter">1 / 9</span>
+    <button class="nb pr" id="bn" onclick="next()">Próx. →</button>
+  </div>
+  <div class="kh">deslize para navegar</div>
+</div>
+
+<script>
+const S=document.querySelectorAll('.slide'),T=S.length;
+let C=0;
+const D=document.getElementById('dots');
+S.forEach((_,i)=>{const d=document.createElement('button');d.className='nd'+(i===0?' active':'');d.onclick=()=>go(i);D.appendChild(d);});
+function go(n){
+  if(n<0||n>=T||n===C)return;
+  S[C].querySelectorAll('.a').forEach(e=>{e.style.animation='none';e.offsetHeight;e.style.animation='';});
+  S[C].classList.remove('active');C=n;S[C].classList.add('active');ui();
+}
+function next(){go(C+1);}function prev(){go(C-1);}
+function ui(){
+  const p=C===0?0:C===T-1?100:(C/(T-1))*100;
+  document.getElementById('progress-fill').style.width=p+'%';
+  document.getElementById('counter').textContent=`${C+1} / ${T}`;
+  document.querySelectorAll('.nd').forEach((d,i)=>d.classList.toggle('active',i===C));
+  document.getElementById('bp').disabled=C===0;
+  document.getElementById('bn').disabled=C===T-1;
+}
+document.addEventListener('keydown',e=>{
+  if(e.key==='ArrowRight'||e.key===' '){e.preventDefault();next();}
+  if(e.key==='ArrowLeft'){e.preventDefault();prev();}
+});
+let tx=0;
+document.getElementById('stage').addEventListener('touchstart',e=>tx=e.touches[0].clientX,{passive:true});
+document.getElementById('stage').addEventListener('touchend',e=>{const dx=tx-e.changedTouches[0].clientX;if(Math.abs(dx)>40)dx>0?next():prev();});
+ui();
+</script>
+</body>
+</html>
