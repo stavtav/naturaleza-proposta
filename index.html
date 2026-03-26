@@ -8,17 +8,17 @@
 <style>
 *{margin:0;padding:0;box-sizing:border-box;}
 :root{
-  --black:#070e08;
-  --dark:#0d1a0e;
-  --dark2:#132116;
-  --dark3:#1d3320;
-  --green:#7dbf5a;
-  --green-dim:rgba(125,191,90,.13);
-  --green-glow:rgba(125,191,90,.32);
-  --white:#f5f1e8;
-  --off:#ddd8cc;
-  --gray:#b0a99e;
-  --gray-dim:#7a7470;
+  --black:#f5f3ee;
+  --dark:#edeae3;
+  --dark2:#e4e0d8;
+  --dark3:#c8c2b6;
+  --green:#1a5fa8;
+  --green-dim:rgba(26,95,168,.1);
+  --green-glow:rgba(26,95,168,.28);
+  --white:#12233d;
+  --off:#2c3e5a;
+  --gray:#4a5c73;
+  --gray-dim:#7a8fa6;
   --fd:'Syne',sans-serif;
   --fm:'Space Mono',monospace;
   --fb:'Inter',sans-serif;
@@ -120,13 +120,13 @@ html,body{width:100%;height:100%;overflow:hidden;background:var(--black);color:v
 .s-ctx .tr{justify-content:center;}
 
 /* ═══════ S-GREEN ═══════ */
-.s-grn{background:var(--green);color:var(--black);}
-.s-grn .deco-light{position:absolute;inset:0;background:radial-gradient(ellipse at 25% 65%,rgba(255,255,255,.1),transparent 60%);}
-.s-grn .ey{color:rgba(0,0,0,.5);}
-.s-grn .bt{color:var(--black);font-size:clamp(22px,4vw,62px);}
-.s-grn .bt em{color:rgba(0,0,0,.42);}
-.s-grn .dv{background:rgba(0,0,0,.2);}
-.s-grn .st{color:rgba(0,0,0,.72);max-width:540px;font-weight:500;}
+.s-grn{background:#1a5fa8;color:#f5f3ee;}
+.s-grn .deco-light{position:absolute;inset:0;background:radial-gradient(ellipse at 25% 65%,rgba(255,255,255,.08),transparent 60%);}
+.s-grn .ey{color:rgba(255,255,255,.55);}
+.s-grn .bt{color:#f5f3ee;font-size:clamp(22px,4vw,62px);}
+.s-grn .bt em{color:rgba(255,255,255,.45);}
+.s-grn .dv{background:rgba(255,255,255,.25);}
+.s-grn .st{color:rgba(255,255,255,.82);max-width:540px;font-weight:500;}
 
 /* ═══════ S-LIST ═══════ */
 .s-list{background:var(--black);}
@@ -198,8 +198,8 @@ html,body{width:100%;height:100%;overflow:hidden;background:var(--black);color:v
 }
 .nb:hover:not(:disabled){border-color:var(--green);color:var(--green);}
 .nb:disabled{opacity:.22;cursor:default;}
-.nb.pr{background:var(--green);border-color:var(--green);color:var(--black);font-weight:700;}
-.nb.pr:hover:not(:disabled){background:#8fd468;}
+.nb.pr{background:#1a5fa8;border-color:#1a5fa8;color:#f5f3ee;font-weight:700;}
+.nb.pr:hover:not(:disabled){background:#2470c4;}
 .nc{display:flex;align-items:center;gap:10px;flex:1;justify-content:center;}
 .nd{width:9px;height:9px;border-radius:50%;background:var(--dark3);cursor:pointer;transition:all .2s;border:none;padding:0;}
 .nd.active{background:var(--green);box-shadow:0 0 8px var(--green-glow);transform:scale(1.4);}
@@ -291,7 +291,7 @@ html,body{width:100%;height:100%;overflow:hidden;background:var(--black);color:v
     <div class="slide s-grn" data-index="2">
       <div class="deco"><div class="deco-light"></div></div>
       <div class="inner">
-        <p class="ey a a1">Visão de sucesso</p>
+        <p class="ey a a1">Você disse</p>
         <h2 class="bt a a2">Quero que quem vê, <em>entenda</em>.</h2>
         <div class="dv a a3"></div>
         <p class="st a a4">Uma fotografia do negócio, eternizada. Ver pessoas se interessando, interagindo — e comprando.</p>
